@@ -1,0 +1,74 @@
+<!-- form.component.html -->
+<h2 mat-dialog-title>
+  <mat-icon>people</mat-icon>
+  {{ isEditMode ? 'Actualizar Persona' : 'Nuevo Usuario' }}
+</h2>
+
+<mat-dialog-content [formGroup]="personForm" class="form-container">
+
+  <!-- Foto arriba del formulario -->
+  <div class="photo-upload">
+    <input type="file" #fileInput hidden (change)="onFileChange($event)">
+    <button mat-fab color="primary" (click)="fileInput.click()" class="photo-button">
+      <mat-icon *ngIf="!personForm.get('photo')?.value">add</mat-icon>
+      <img *ngIf="personForm.get('photo')?.value"
+           [src]="personForm.get('photo')?.value | filePreview"
+           alt="Foto"
+           class="photo-preview"/>
+    </button>
+    <div class="photo-label">Agregar foto</div>
+  </div>
+
+  <!-- Inputs del formulario -->
+  <mat-form-field appearance="fill" class="full-width">
+    <mat-label>Nombres</mat-label>
+    <input matInput formControlName="first_name">
+    <mat-error *ngIf="personForm.get('first_name')?.invalid">Requerido</mat-error>
+  </mat-form-field>
+
+  <mat-form-field appearance="fill" class="full-width">
+    <mat-label>Apellidos</mat-label>
+    <input matInput formControlName="last_name">
+    <mat-error *ngIf="personForm.get('last_name')?.invalid">Requerido</mat-error>
+  </mat-form-field>
+
+  <mat-form-field appearance="fill">
+    <mat-label>Fecha de Nacimiento</mat-label>
+    <input matInput [matDatepicker]="picker" formControlName="birth_date" (dateChange)="onBirthDateChange($event)">
+    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+    <mat-datepicker #picker></mat-datepicker>
+    <mat-error *ngIf="personForm.get('birth_date')?.invalid">Requerido</mat-error>
+  </mat-form-field>
+
+  <mat-form-field appearance="fill" *ngIf="personForm.get('age')?.value > 0">
+    <mat-label>Edad</mat-label>
+    <input matInput formControlName="age" [disabled]="true">
+  </mat-form-field>
+
+  <mat-form-field appearance="fill">
+    <mat-label>Profesión</mat-label>
+    <mat-select formControlName="profession">
+      <mat-option *ngFor="let prof of professions" [value]="prof">{{ prof }}</mat-option>
+    </mat-select>
+    <mat-error *ngIf="personForm.get('profession')?.invalid">Requerido</mat-error>
+  </mat-form-field>
+
+  <mat-form-field appearance="fill" class="full-width">
+    <mat-label>Dirección</mat-label>
+    <input matInput formControlName="address">
+    <mat-error *ngIf="personForm.get('address')?.invalid">Requerido</mat-error>
+  </mat-form-field>
+
+  <mat-form-field appearance="fill">
+    <mat-label>Teléfono</mat-label>
+    <input matInput formControlName="phone">
+    <mat-error *ngIf="personForm.get('phone')?.invalid">Número válido entre 7 y 15 dígitos</mat-error>
+  </mat-form-field>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-button (click)="cancel()">Cancelar</button>
+  <button mat-flat-button color="primary" (click)="submit()">
+    {{ isEditMode ? 'Actualizar' : 'Guardar' }}
+  </button>
+</mat-dialog-actions>

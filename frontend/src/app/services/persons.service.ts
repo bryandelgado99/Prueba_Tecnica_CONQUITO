@@ -8,7 +8,7 @@ import { Person, PersonCreateRequest, PersonResponse } from '../models/persons.m
   providedIn: 'root'
 })
 export class PersonService {
-  private readonly API_URL = 'http://localhost:3000/api'; // Cambia por tu puerto del backend
+  private readonly API_URL = 'http://localhost:3000/api/persons';
 
   constructor(private http: HttpClient) {}
 
