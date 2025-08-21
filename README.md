@@ -12,7 +12,7 @@
 
 ## Tecnologías Empleadas
 - _Backend_: ExpressJS + PUG Template Views
-- _Frontend_: Angular 20 + Material Design 3
+- _Frontend_: React + ShadeCDN/UI
 - _Database_: PostgreSQL
 
 ## Estructura del Proyecto
