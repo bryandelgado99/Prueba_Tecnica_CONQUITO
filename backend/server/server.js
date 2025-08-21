@@ -25,15 +25,12 @@ app.set("views", path.join(__dirname, "views"));
 app.set("view engine", "pug");
 
 // Rutas
-app.use('/api/form', formRouter);
+app.use('/api/persons', formRouter);
 app.use('/api/dashboard', dashboardRouter);
 
 // Manejo de ruta no encontrada
 app.use((req, res) => {
-    res.status(404).render("error", {
-        title: "Página no encontrada",
-        message: "El recurso que buscas no existe (Error 404)."
-    });
+    res.status(404).send("404 | Endpoint no encontrado");
 });
 
 // Inicializamos el server
