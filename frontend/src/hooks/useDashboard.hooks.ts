@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import dashboardService from '../services/dashboard.service';
 import type {DashboardData, UseDashboardReturn} from '../types';
 
-export const useDashboard = (): UseDashboardReturn => {
+export const useDashboardHooks = (): UseDashboardReturn => {
     const [data, setData] = useState<DashboardData>({
         professionStats: [],
         ageRangeStats: [],

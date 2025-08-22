@@ -1,25 +1,28 @@
 import React from 'react';
-import { useDashboard } from '../hooks/useDashboard';
+import { useDashboardHooks } from '../hooks/useDashboard.hooks.ts';
 import StatsCardComponent from "../components/Dashboard/StatsCard.component";
 import ProfessionBarChartComponent from "../components/Dashboard/BarChart.component";
 import AgeRangePieChartComponent from "../components/Dashboard/PieChart.component";
 import MonthlyLineChartComponent from "../components/Dashboard/LineChart.component";
+import { TbUsersGroup } from "react-icons/tb";
+import { LuChartArea } from "react-icons/lu";
+import { LuCalendar1 } from "react-icons/lu";
 
 // Iconos simples usando emojis
 const Icons = {
-    Users: () => <span className="text-xl">👥</span>,
-    Chart: () => <span className="text-xl">📊</span>,
-    Calendar: () => <span className="text-xl">📅</span>
+    Users: () => <TbUsersGroup />,
+    Chart: () => <LuChartArea />,
+    Calendar: () => <LuCalendar1 />
 };
 
 const Dashboard: React.FC = () => {
-    const { data, loading, error } = useDashboard();
+    const { data, loading, error } = useDashboardHooks();
 
     if (loading) {
         return (
-            <div className="flex justify-center items-center h-64">
+            <div className="flex flex-col justify-center items-center h-full space-y-6">
                 <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-500"></div>
-                <span className="ml-3 text-gray-600">Cargando dashboard...</span>
+                <span className="text-gray-600">Cargando Información</span>
             </div>
         );
     }
