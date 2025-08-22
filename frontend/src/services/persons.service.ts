@@ -1,10 +1,10 @@
 import api from './api';
-import type { Person, ApiResponse } from '../types';
+import type {Person, ApiResponse, PersonFormData} from '../types';
 
 export const personService = {
 
     // Crear una persona
-    createPerson: async (person: Partial<Person>): Promise<Person> => {
+    createPerson: async (person: PersonFormData): Promise<Person> => {
         try {
             const response = await api.post<ApiResponse<Person>>('/persons/create', person);
             return response.data.data || response.data as unknown as Person;
@@ -15,7 +15,7 @@ export const personService = {
     },
 
     // Actualizar una persona
-    updatePerson: async (id: number | string, person: Partial<Person>): Promise<Person> => {
+    updatePerson: async (id: number | string, person: Partial<PersonFormData>): Promise<Person> => {
         try {
             const response = await api.put<ApiResponse<Person>>(`/persons/${id}`, person);
             return response.data.data || response.data as unknown as Person;

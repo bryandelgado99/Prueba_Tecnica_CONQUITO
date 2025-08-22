@@ -1,25 +1,27 @@
 export interface Person {
     id?: string;
-    nombres: string;
-    apellidos: string;
-    fechaNacimiento: string;
-    edad?: number;
-    profesion: string;
-    direccion: string;
-    telefono: string;
-    foto?: string;
-    createdAt?: string;
-    updatedAt?: string;
+    first_name: string;
+    last_name: string;
+    birth_date: string;
+    age?: number;
+    profession: string;
+    address: string;
+    phone: string;
+    photo_url?: string;
+    created_at?: string;
+    updated_at?: string;
 }
 
 export interface PersonFormData {
-    nombres: string;
-    apellidos: string;
-    fechaNacimiento: string;
-    profesion: string;
-    direccion: string;
-    telefono: string;
-    foto?: File | string;
+    id?: string;
+    first_name: string;
+    last_name: string;
+    birth_date: string;
+    profession: string;
+    age?: number;
+    address: string;
+    phone: string;
+    photo_url?: File | string;
 }
 
 // Tipos para el Dashboard
@@ -81,9 +83,12 @@ export interface UsePersonsReturn {
     persons: Person[];
     loading: boolean;
     error: string | null;
+    isAutoRefreshPaused: boolean;
     createPerson: (person: PersonFormData) => Promise<void>;
     updatePerson: (id: string, person: Partial<PersonFormData>) => Promise<void>;
     deletePerson: (id: string) => Promise<void>;
     getPersonById: (id: string) => Promise<Person | null>;
     refreshPersons: () => void;
+    pauseAutoRefresh: () => void;
+    resumeAutoRefresh: () => void;
 }
