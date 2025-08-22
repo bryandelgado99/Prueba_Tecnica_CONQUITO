@@ -1,63 +1,34 @@
 // controllers/personController.js
 import Form from "../database/models/form.model.js";
+import {encodeImageToBase64} from "../utils/imageUpdater.js";
 
 // Crear una nueva persona
 export const createPerson = async (req, res) => {
     try {
         const { first_name, last_name, birth_date, profession, address, phone, photo_url } = req.body;
 
-        // Validación rápida
         if (!first_name || !last_name || !birth_date || !profession || !address || !phone) {
             return res.status(400).json({ error: "Todos los campos son obligatorios" });
         }
 
-        // ========== CALCULAR EDAD DIRECTAMENTE ==========
-        console.log('=== CALCULANDO EDAD ===');
-        console.log('Fecha de nacimiento recibida:', birth_date);
-
-        // Extraer año, mes, día del string "1990-05-15"
-        const [birthYear, birthMonth, birthDay] = birth_date.split('-').map(num => parseInt(num));
-
+        // Calcular edad
+        const [year, month, day] = birth_date.split('-').map(Number);
         const today = new Date();
-        const currentYear = today.getFullYear();
-        const currentMonth = today.getMonth() + 1; // getMonth() es 0-indexed
-        const currentDay = today.getDate();
-
-        console.log(`Nacimiento: ${birthDay}/${birthMonth}/${birthYear}`);
-        console.log(`Hoy: ${currentDay}/${currentMonth}/${currentYear}`);
-
-        let age = currentYear - birthYear;
-
-        // Si aún no ha cumplido años este año, restar 1
-        if (currentMonth < birthMonth || (currentMonth === birthMonth && currentDay < birthDay)) {
+        let age = today.getFullYear() - year;
+        if (today.getMonth() + 1 < month || (today.getMonth() + 1 === month && today.getDate() < day)) {
             age--;
         }
 
-        console.log(`Edad calculada: ${age}`);
-        // ===============================================
-
-        console.log('Datos a crear:', {
+        const person = await Form.create({
             first_name,
             last_name,
             birth_date,
             age,
             profession,
             address,
-            phone
-        });
-
-        const person = await Form.create({
-            first_name,
-            last_name,
-            birth_date,
-            age, // Ahora debería funcionar porque está en el modelo
-            profession,
-            address,
             phone,
-            photo_url,
+            photo_url: photo_url || null // guardamos la URL que envíe el frontend
         });
-
-        console.log('Persona creada en DB:', person.toJSON());
 
         return res.status(201).json({
             message: "Persona creada exitosamente",
@@ -110,52 +81,35 @@ export const updatePerson = async (req, res) => {
         const { first_name, last_name, birth_date, profession, address, phone, photo_url } = req.body;
 
         const person = await Form.findByPk(id);
+        if (!person) return res.status(404).json({ error: "Persona no encontrada" });
 
-        if (!person) {
-            return res.status(404).json({ error: "Persona no encontrada" });
-        }
-
-        // Calcular nueva edad si se actualiza la fecha de nacimiento
-        let age = person.age; // Mantener la edad actual por defecto
-
+        // Recalcular edad si se actualiza birth_date
+        let age = person.age;
         if (birth_date) {
-            console.log('Recalculando edad para actualización...');
-            const [birthYear, birthMonth, birthDay] = birth_date.split('-').map(num => parseInt(num));
-
+            const [year, month, day] = birth_date.split('-').map(Number);
             const today = new Date();
-            const currentYear = today.getFullYear();
-            const currentMonth = today.getMonth() + 1;
-            const currentDay = today.getDate();
-
-            age = currentYear - birthYear;
-
-            if (currentMonth < birthMonth || (currentMonth === birthMonth && currentDay < birthDay)) {
-                age--;
-            }
-
-            console.log(`Nueva edad calculada: ${age}`);
+            age = today.getFullYear() - year;
+            if (today.getMonth() + 1 < month || (today.getMonth() + 1 === month && today.getDate() < day)) age--;
         }
 
         await person.update({
             first_name,
             last_name,
             birth_date,
-            age, // Actualizar la edad
+            age,
             profession,
             address,
             phone,
-            photo_url,
+            photo_url: photo_url || person.photo_url
         });
 
-        return res.json({
-            message: "Persona actualizada exitosamente",
-            data: person
-        });
+        return res.json({ message: "Persona actualizada exitosamente", data: person });
     } catch (error) {
         console.error(error);
         return res.status(500).json({ error: "Error al actualizar la persona" });
     }
 };
+
 
 // Eliminar persona
 export const deletePerson = async (req, res) => {

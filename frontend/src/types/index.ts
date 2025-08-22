@@ -21,7 +21,7 @@ export interface PersonFormData {
     age?: number;
     address: string;
     phone: string;
-    photo_url?: File | string;
+    photo_url?: string;
 }
 
 // Tipos para el Dashboard
