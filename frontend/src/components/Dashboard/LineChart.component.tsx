@@ -1,5 +1,6 @@
 import React from 'react';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
+import { Card, CardHeader, CardTitle, CardContent } from '../UI/card.tsx';
 import type { MonthlyStat } from '../../types';
 
 interface MonthlyLineChartProps {
@@ -14,16 +15,14 @@ interface ChartDataItem {
 }
 
 const MonthlyLineChartComponent: React.FC<MonthlyLineChartProps> = ({
-                                                               data,
-                                                               title = "Registros por Mes"
-                                                           }) => {
-    // Nombres de meses para convertir números a texto
+                                                                        data,
+                                                                        title = "Registros por Mes"
+                                                                    }) => {
     const monthNames: string[] = [
         'Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio',
         'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'
     ];
 
-    // Transformar los datos para el gráfico
     const chartData: ChartDataItem[] = data.map(item => ({
         month: monthNames[item.month - 1] || 'Sin especificar',
         count: item.count || 0,
@@ -31,9 +30,11 @@ const MonthlyLineChartComponent: React.FC<MonthlyLineChartProps> = ({
     })).sort((a, b) => a.monthNumber - b.monthNumber);
 
     return (
-        <div className="dashboard-card">
-            <h3 className="text-lg font-semibold text-gray-800 mb-4">{title}</h3>
-            <div className="h-80">
+        <Card className="w-full h-96 flex flex-col">
+            <CardHeader>
+                <CardTitle>{title}</CardTitle>
+            </CardHeader>
+            <CardContent className="h-full">
                 <ResponsiveContainer width="100%" height="100%">
                     <LineChart data={chartData} margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
                         <CartesianGrid strokeDasharray="3 3" />
@@ -56,8 +57,8 @@ const MonthlyLineChartComponent: React.FC<MonthlyLineChartProps> = ({
                         />
                     </LineChart>
                 </ResponsiveContainer>
-            </div>
-        </div>
+            </CardContent>
+        </Card>
     );
 };
 

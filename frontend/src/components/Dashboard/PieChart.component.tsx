@@ -1,5 +1,6 @@
 import React from 'react';
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip, Legend } from 'recharts';
+import { Card, CardHeader, CardTitle, CardContent } from '../UI/card';
 import type { AgeRangeStat } from '../../types';
 
 interface AgeRangePieChartProps {
@@ -13,24 +14,23 @@ interface ChartDataItem {
 }
 
 const AgeRangePieChartComponent: React.FC<AgeRangePieChartProps> = ({
-   data,
-   title = "Distribución por Rango de Edad"
-}) => {
-// Colores para cada segmento
+                                                                        data,
+                                                                        title = "Distribución por Rango de Edad"
+                                                                    }) => {
     const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#8884D8'];
 
-    console.log("AgeRangePieChartComponent data:", data);
-
-    // Transformar los datos para el gráfico
     const chartData: ChartDataItem[] = Object.entries(data).map(([range, count]) => ({
         name: range,
         value: count as unknown as number
     }));
 
     return (
-        <div className="dashboard-card">
-            <h3 className="text-lg font-semibold text-gray-800 mb-4">{title}</h3>
-            <div className="h-80">
+        <Card className="w-full h-96 flex flex-col">
+            <CardHeader>
+                <CardTitle>{title}</CardTitle>
+            </CardHeader>
+            {/* Hacemos que el contenido crezca para ocupar todo el espacio */}
+            <CardContent className="flex-1">
                 <ResponsiveContainer width="100%" height="100%">
                     <PieChart>
                         <Pie
@@ -49,8 +49,8 @@ const AgeRangePieChartComponent: React.FC<AgeRangePieChartProps> = ({
                         <Legend />
                     </PieChart>
                 </ResponsiveContainer>
-            </div>
-        </div>
+            </CardContent>
+        </Card>
     );
 };
 

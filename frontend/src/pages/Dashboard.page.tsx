@@ -1,27 +1,19 @@
 import React from 'react';
 import { useDashboard } from '../hooks/useDashboard';
-import StatsCardComponent from "../components/Dashboard/StatsCard.component.tsx";
-import ProfessionBarChartComponent from "../components/Dashboard/BarChart.component.tsx";
-import AgeRangePieChartComponent from "../components/Dashboard/PieChart.component.tsx";
-import MonthlyLineChartComponent from "../components/Dashboard/LineChart.component.tsx";
+import StatsCardComponent from "../components/Dashboard/StatsCard.component";
+import ProfessionBarChartComponent from "../components/Dashboard/BarChart.component";
+import AgeRangePieChartComponent from "../components/Dashboard/PieChart.component";
+import MonthlyLineChartComponent from "../components/Dashboard/LineChart.component";
 
-
-// Iconos simples usando emojis (puedes usar react-icons si prefieres)
+// Iconos simples usando emojis
 const Icons = {
     Users: () => <span className="text-xl">👥</span>,
     Chart: () => <span className="text-xl">📊</span>,
-    Calendar: () => <span className="text-xl">📅</span>,
-    Refresh: () => <span className="text-xl">🔄</span>
+    Calendar: () => <span className="text-xl">📅</span>
 };
 
 const Dashboard: React.FC = () => {
-    const { data, loading, error, refreshData } = useDashboard();
-
-    // Calcular estadísticas totales
-    const totalPersons: number = data.professionStats.reduce((sum, item) => sum + (item.count || 0), 0);
-    const totalProfessions: number = data.professionStats.length;
-    const currentMonth: number = new Date().getMonth() + 1;
-    const currentMonthRegistrations: number = data.monthlyStats.find(item => item.month === currentMonth)?.count || 0;
+    const { data, loading, error } = useDashboard();
 
     if (loading) {
         return (
@@ -42,35 +34,20 @@ const Dashboard: React.FC = () => {
                     <div className="ml-3">
                         <h3 className="text-sm font-medium text-red-800">Error al cargar el dashboard</h3>
                         <p className="text-sm text-red-700 mt-1">{error}</p>
-                        <button
-                            onClick={refreshData}
-                            className="mt-2 btn-primary text-sm"
-                        >
-                            Reintentar
-                        </button>
                     </div>
                 </div>
             </div>
         );
     }
 
+    // Calcular estadísticas totales
+    const totalPersons: number = data.professionStats.reduce((sum, item) => sum + (item.count || 0), 0);
+    const totalProfessions: number = data.professionStats.length;
+    const currentMonth: number = new Date().getMonth() + 1;
+    const currentMonthRegistrations: number = data.monthlyStats.find(item => item.month === currentMonth)?.count || 0;
+
     return (
         <div className="space-y-6">
-            {/* Header */}
-            <div className="flex justify-between items-center">
-                <div>
-                    <h1 className="text-3xl font-bold text-gray-900">Dashboard de Estadísticas</h1>
-                    <p className="text-gray-600">Panel de control con estadísticas de personas registradas</p>
-                </div>
-                <button
-                    onClick={refreshData}
-                    className="btn-secondary flex items-center space-x-2"
-                >
-                    <Icons.Refresh />
-                    <span>Actualizar</span>
-                </button>
-            </div>
-
             {/* Cards de estadísticas */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 <StatsCardComponent
